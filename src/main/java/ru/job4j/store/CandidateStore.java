@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CandidateStore {
-    private static final CandidateStore INSTSECOND = new CandidateStore();
+    private static final CandidateStore INST = new CandidateStore();
 
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
 
@@ -19,7 +19,7 @@ public class CandidateStore {
     }
 
     public static CandidateStore instOf() {
-        return INSTSECOND;
+        return INST;
     }
 
     public Collection<Candidate> findAll() {

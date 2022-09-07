@@ -60,15 +60,12 @@ public class Candidate {
             return false;
         }
         Candidate candidate = (Candidate) o;
-        return getId() == candidate.getId()
-                && getName().equals(candidate.getName())
-                && getDesc().equals(candidate.getDesc())
-                && getCreated().equals(candidate.getCreated());
+        return getId() == candidate.getId();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getDesc(), getCreated());
+        return Objects.hash(getId());
     }
 
 }
