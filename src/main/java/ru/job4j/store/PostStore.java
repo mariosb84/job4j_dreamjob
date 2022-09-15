@@ -11,12 +11,14 @@ public class PostStore {
 
     private static final PostStore INST = new PostStore();
 
+    private int id;
+
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
 
     private PostStore() {
-        posts.put(1, new Post(1, "Junior Java Job", "Some Text For Junior Java Job", LocalDateTime.now()));
-        posts.put(2, new Post(2, "Middle Java Job", "Some Text For Middle  Java Job", LocalDateTime.now()));
-        posts.put(3, new Post(3, "Senior Java Job", "Some Text For Senior  Java Job", LocalDateTime.now()));
+        add(new Post(1, "Junior Java Job", "Some Text For Junior Java Job", LocalDateTime.now()));
+        add(new Post(2, "Middle Java Job", "Some Text For Middle  Java Job", LocalDateTime.now()));
+        add(new Post(3, "Senior Java Job", "Some Text For Senior  Java Job", LocalDateTime.now()));
     }
 
     public static PostStore instOf() {
@@ -25,5 +27,10 @@ public class PostStore {
 
     public Collection<Post> findAll() {
         return posts.values();
+    }
+
+    public void add(Post post) {
+        posts.put(id++, post);
+        id += id;
     }
 }
