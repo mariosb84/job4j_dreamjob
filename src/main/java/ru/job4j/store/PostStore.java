@@ -1,17 +1,19 @@
 package ru.job4j.store;
 
+import net.jcip.annotations.ThreadSafe;
 import ru.job4j.model.Post;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class PostStore {
 
     private static final PostStore INST = new PostStore();
 
-    private int id;
+    private final CASCount id = new CASCount();
 
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
 
@@ -30,7 +32,30 @@ public class PostStore {
     }
 
     public void add(Post post) {
-        posts.put(id++, post);
-        id += id;
+        posts.put(id.get(), post);
+        id.increment();
     }
+
+    @ThreadSafe
+    public static class CASCount {
+
+        private final AtomicReference<Integer> count = new AtomicReference<>(0);
+
+        public CASCount() {
+        }
+
+        public  void increment() {
+            int value;
+            do {
+                value = count.get();
+            }
+            while (!count.compareAndSet(value, value + 1));
+        }
+
+        public int get() {
+            return this.count.get();
+        }
+
+    }
+
 }
