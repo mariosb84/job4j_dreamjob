@@ -20,21 +20,25 @@ class PostController {
         model.addAttribute("posts", postStore.findAll());
         return "posts";
     }
+
     @GetMapping("/formAddPost")
     public String formAddPost(Model model) {
         model.addAttribute("post", new Post(0, "Заполните поле", "Заполните поле"));
         return "addPost";
     }
+
     @PostMapping("/createPost")
     public String createPost(@ModelAttribute Post post) {
         postStore.add(post);
         return "redirect:/posts";
     }
+
     @GetMapping("/formUpdatePost/{postId}")
     public String formUpdatePost(Model model, @PathVariable("postId") int id) {
         model.addAttribute("post", postStore.findById(id));
         return "updatePost";
     }
+
     @PostMapping("/updatePost")
     public String updatePost(@ModelAttribute Post post) {
         postStore.update(post);
