@@ -31,12 +31,6 @@
             </tr>
             </thead>
             <tbody>
-            <!--<tr th:each="post: ${posts}">
-                <td th:text="${post.id}" />
-                <td th:text="${post.name}" />
-                <td th:text="${post.description}" />
-                <td th:text="${post.created}" />
-            </tr>-->
             <tr th:each="post: ${posts}">
                 <td th:text="${post.id}"></td>
                 <td>
@@ -45,6 +39,8 @@
                     </a>
                     <span th:text="${post.name}"></span>
                 </td>
+                <td th:text="${post.description}" />
+                <td th:text="${post.created}" />
             </tr>
             </tbody>
         </table>
