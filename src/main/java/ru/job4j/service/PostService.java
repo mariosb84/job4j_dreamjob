@@ -7,9 +7,13 @@ import java.util.Collection;
 
 public class PostService {
 
-    public PostStore store = new PostStore();
+    PostStore store = PostStore.instOf();
 
     private static final PostService POST_SERVICE = new PostService();
+
+    private PostService() {
+
+    }
 
     public static PostService instOf() {
         return POST_SERVICE;
