@@ -9,17 +9,10 @@ public class PostService {
 
     public PostStore store = new PostStore();
 
-    private static PostService postService;
-
-    private static PostService getPostService() {
-        if (postService == null) {
-            postService = new PostService();
-        }
-        return postService;
-    }
+    private static final PostService POST_SERVICE = new PostService();
 
     public static PostService instOf() {
-        return getPostService();
+        return POST_SERVICE;
     }
 
     public Collection<Post> findAll() {
