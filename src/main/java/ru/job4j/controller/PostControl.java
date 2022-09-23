@@ -13,7 +13,11 @@ import ru.job4j.service.PostService;
 @Controller
 class PostController {
 
-    private final PostService postService = PostService.instOf();
+    private final PostService postService;
+
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
 
     @GetMapping("/posts")
     public String posts(Model model) {
