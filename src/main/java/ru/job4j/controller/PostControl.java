@@ -1,6 +1,7 @@
 package ru.job4j.controller;
 
 
+import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import ru.job4j.model.Post;
 import ru.job4j.service.PostService;
 
+@ThreadSafe
 @Controller
 class PostController {
 
