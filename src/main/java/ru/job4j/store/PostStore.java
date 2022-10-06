@@ -2,8 +2,8 @@ package ru.job4j.store;
 
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Repository;
-
 import ru.job4j.model.Post;
+import ru.job4j.service.CityService;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -20,9 +20,9 @@ public class PostStore {
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
 
     private PostStore() {
-        add(new Post(1, "Junior Java Job", "Some Text For Junior Java Job", LocalDateTime.now()));
-        add(new Post(2, "Middle Java Job", "Some Text For Middle  Java Job", LocalDateTime.now()));
-        add(new Post(3, "Senior Java Job", "Some Text For Senior  Java Job", LocalDateTime.now()));
+        add(new Post(1, "Junior Java Job", "Some Text For Junior Java Job", LocalDateTime.now(), new CityService().findById(1)));
+        add(new Post(2, "Middle Java Job", "Some Text For Middle  Java Job", LocalDateTime.now(), new CityService().findById(2)));
+        add(new Post(3, "Senior Java Job", "Some Text For Senior  Java Job", LocalDateTime.now(), new CityService().findById(3)));
     }
 
     public Collection<Post> findAll() {
