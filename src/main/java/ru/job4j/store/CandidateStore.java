@@ -20,9 +20,9 @@ public class CandidateStore {
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
 
     private CandidateStore() {
-        add(new Candidate(1, "Ivan", "Junior Java Developer", LocalDateTime.now()));
-        add(new Candidate(2, "Pavel", "Middle  Java Developer", LocalDateTime.now()));
-        add(new Candidate(3, "Dmitriy", "Senior  Java Developer", LocalDateTime.now()));
+        add(new Candidate(1, "Ivan", "Junior Java Developer", LocalDateTime.now(), new byte[] {1, 2}));
+        add(new Candidate(2, "Pavel", "Middle  Java Developer", LocalDateTime.now(), new byte[] {2, 3}));
+        add(new Candidate(3, "Dmitriy", "Senior  Java Developer", LocalDateTime.now(), new byte[] {4, 5}));
     }
 
     public Collection<Candidate> findAll() {

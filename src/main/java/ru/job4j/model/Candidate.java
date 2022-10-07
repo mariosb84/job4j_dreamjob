@@ -8,6 +8,7 @@ public class Candidate {
     private String name;
     private String desc;
     private LocalDateTime created = LocalDateTime.now();
+    private byte[] photo;
 
     public Candidate() {
     }
@@ -18,11 +19,12 @@ public class Candidate {
         this.desc = desc;
     }
 
-    public Candidate(int id, String name, String desc, LocalDateTime created) {
+    public Candidate(int id, String name, String desc, LocalDateTime created, byte[] photo) {
         this.id = id;
         this.name = name;
         this.desc = desc;
         this.created = created;
+        this.photo = photo;
     }
 
     public int getId() {
@@ -55,6 +57,14 @@ public class Candidate {
 
     public void setCreated(LocalDateTime created) {
         this.created = created;
+    }
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
     }
 
     @Override
