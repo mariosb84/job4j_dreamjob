@@ -2,25 +2,23 @@ package ru.job4j.service;
 
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
-
 import ru.job4j.model.Post;
-import ru.job4j.store.PostStore;
+import ru.job4j.store.PostDbStore;
 
-import java.util.Collection;
+import java.util.List;
 
 @ThreadSafe
 @Service
 public class PostService {
 
-        private final PostStore store;
+        private final PostDbStore store;
 
-        public PostService(PostStore store) {
+          CityService cityService = new CityService();
+
+        public PostService(PostDbStore store) {
             this.store = store;
         }
 
-        public Collection<Post> findAll() {
-        return store.findAll();
-    }
 
         public void add(Post post) {
         store.add(post);
@@ -32,6 +30,16 @@ public class PostService {
 
         public void update(Post post) {
         store.update(post);
+    }
+
+        public List<Post> findAll() {
+        List<Post> posts = store.findAll();
+        posts.forEach(
+                post -> post.setCity(
+                        cityService.findById(post.getCity().getId())
+                )
+        );
+        return posts;
     }
 
 }
