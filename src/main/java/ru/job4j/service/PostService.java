@@ -2,11 +2,9 @@ package ru.job4j.service;
 
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
-
 import ru.job4j.model.Post;
 import ru.job4j.store.PostDbStore;
 
-import java.util.Collection;
 import java.util.List;
 
 @ThreadSafe
@@ -21,9 +19,6 @@ public class PostService {
             this.store = store;
         }
 
-        /*public Collection<Post> findAll() {
-        return store.findAll();
-    }*/
 
         public void add(Post post) {
         store.add(post);

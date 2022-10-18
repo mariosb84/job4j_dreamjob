@@ -1,6 +1,8 @@
 package ru.job4j.store;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.model.Post;
 import java.sql.Connection;
@@ -11,6 +13,8 @@ import java.util.List;
 
 @Repository
 public class PostDbStore {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PostDbStore.class.getName());
 
     private final BasicDataSource pool;
 
@@ -32,7 +36,7 @@ public class PostDbStore {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Exception in  findAll() method", e);
         }
         return posts;
     }
@@ -40,7 +44,7 @@ public class PostDbStore {
 
     public Post add(Post post) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("INSERT INTO post(name, discription, city_id) VALUES (?, ?, ?)",
+             PreparedStatement ps =  cn.prepareStatement("INSERT INTO post(name, description, city_id) VALUES (?, ?, ?)",
                      PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, post.getName());
@@ -53,20 +57,20 @@ public class PostDbStore {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Exception in  add() method", e);
         }
         return post;
     }
 
     public void update(Post post) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("UPDATE post SET name = ?, discription = ?, city_id = ? WHERE id = ?")) {
+             PreparedStatement ps =  cn.prepareStatement("UPDATE post SET name = ?, description = ?, city_id = ? WHERE id = ?")) {
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
             ps.setInt(3, post.getCity().getId());
             ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Exception in  update() method", e);
            }
         }
 
@@ -83,7 +87,7 @@ public class PostDbStore {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Exception in  findById() method", e);
         }
         return null;
     }
@@ -95,7 +99,7 @@ public class PostDbStore {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Exception in  delete() method", e);
         }
     }
 
