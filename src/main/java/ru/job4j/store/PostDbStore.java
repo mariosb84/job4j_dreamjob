@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.model.City;
 import ru.job4j.model.Post;
+import ru.job4j.service.CityService;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,7 +36,9 @@ public class PostDbStore {
                     posts.add(new Post(it.getInt("id"),
                             it.getString("name"),
                             it.getString("description"),
-                            it.getInt("city_id")));
+                            LocalDateTime.now(),
+                            new City(it.getInt("city_id"),
+                                    new CityService().findById(it.getInt("city_id")).getName())));
                 }
             }
         } catch (Exception e) {
@@ -85,7 +89,9 @@ public class PostDbStore {
                     return new Post(it.getInt("id"),
                             it.getString("name"),
                             it.getString("description"),
-                            it.getInt("city_id"));
+                            LocalDateTime.now(),
+                             new City(it.getInt("city_id"),
+                                     new CityService().findById(it.getInt("city_id")).getName()));
                 }
             }
         } catch (Exception e) {
