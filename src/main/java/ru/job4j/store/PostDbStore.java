@@ -4,7 +4,6 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import ru.job4j.model.City;
 import ru.job4j.model.Post;
 import ru.job4j.service.CityService;
 
@@ -22,6 +21,8 @@ public class PostDbStore {
 
     private final BasicDataSource pool;
 
+    CityService cityService = new CityService();
+
     public PostDbStore(BasicDataSource pool) {
         this.pool = pool;
     }
@@ -37,8 +38,7 @@ public class PostDbStore {
                             it.getString("name"),
                             it.getString("description"),
                             LocalDateTime.now(),
-                            new City(it.getInt("city_id"),
-                                    new CityService().findById(it.getInt("city_id")).getName())));
+                            cityService.findById(it.getInt("city_id"))));
                 }
             }
         } catch (Exception e) {
@@ -74,6 +74,7 @@ public class PostDbStore {
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
             ps.setInt(3, post.getCity().getId());
+            ps.setInt(4, post.getId());
             ps.executeUpdate();
         } catch (Exception e) {
             LOG.error("Exception in  update() method", e);
@@ -90,8 +91,7 @@ public class PostDbStore {
                             it.getString("name"),
                             it.getString("description"),
                             LocalDateTime.now(),
-                             new City(it.getInt("city_id"),
-                                     new CityService().findById(it.getInt("city_id")).getName()));
+                            cityService.findById(it.getInt("city_id")));
                 }
             }
         } catch (Exception e) {
@@ -100,11 +100,11 @@ public class PostDbStore {
         return null;
     }
 
-    public void delete(int id) {
+    public void delete(Post post) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =
                      cn.prepareStatement("DELETE FROM post WHERE id = ?")) {
-            ps.setInt(1, id);
+            ps.setInt(1, post.getId());
             ps.executeUpdate();
         } catch (Exception e) {
             LOG.error("Exception in  delete() method", e);

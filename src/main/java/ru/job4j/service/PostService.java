@@ -13,7 +13,7 @@ public class PostService {
 
         private final PostDbStore store;
 
-          CityService cityService;
+          CityService cityService = new CityService();
 
         public PostService(PostDbStore store) {
             this.store = store;
