@@ -10,6 +10,7 @@ import ru.job4j.service.CityService;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +22,11 @@ public class PostDbStore {
 
     private final BasicDataSource pool;
 
-    CityService cityService = new CityService();
+    private final CityService cityService;
 
-    public PostDbStore(BasicDataSource pool) {
+    public PostDbStore(BasicDataSource pool, CityService cityService) {
         this.pool = pool;
+        this.cityService = cityService;
     }
 
     public List<Post> findAll() {
@@ -109,6 +111,14 @@ public class PostDbStore {
         } catch (Exception e) {
             LOG.error("Exception in  delete() method", e);
         }
+    }
+
+    private Post addPost(ResultSet it) throws SQLException {
+        return new Post(it.getInt("id"),
+                it.getString("name"),
+                it.getString("description"),
+                LocalDateTime.now(),
+                cityService.findById(it.getInt("city_id")));
     }
 
 }
