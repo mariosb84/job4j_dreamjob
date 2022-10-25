@@ -13,10 +13,11 @@ public class PostService {
 
         private final PostDbStore store;
 
-          CityService cityService = new CityService();
+    private final CityService cityService;
 
-        public PostService(PostDbStore store) {
+        public PostService(PostDbStore store, CityService cityService) {
             this.store = store;
+            this.cityService = cityService;
         }
 
 
