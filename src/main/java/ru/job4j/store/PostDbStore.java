@@ -18,6 +18,16 @@ import java.util.List;
 @Repository
 public class PostDbStore {
 
+    private final static String FIND_ALL = "SELECT * FROM post ORDER BY id";
+
+    private final static String ADD = "INSERT INTO post(name, description, city_id) VALUES (?, ?, ?)";
+
+    private final static String UPDATE = "UPDATE post SET name = ?, description = ?, city_id = ? WHERE id = ?";
+
+    private final static String FIND_BY_ID = "SELECT * FROM post WHERE id = ?";
+
+    private final static String DELETE = "DELETE FROM post WHERE id = ?";
+
     private static final Logger LOG = LoggerFactory.getLogger(PostDbStore.class.getName());
 
     private final BasicDataSource pool;
@@ -32,15 +42,10 @@ public class PostDbStore {
     public List<Post> findAll() {
         List<Post> posts = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post ORDER BY id")
-        ) {
+             PreparedStatement ps =  cn.prepareStatement(FIND_ALL)) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    posts.add(new Post(it.getInt("id"),
-                            it.getString("name"),
-                            it.getString("description"),
-                            LocalDateTime.now(),
-                            cityService.findById(it.getInt("city_id"))));
+                    posts.add(addPost(it));
                 }
             }
         } catch (Exception e) {
@@ -52,9 +57,8 @@ public class PostDbStore {
 
     public Post add(Post post) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("INSERT INTO post(name, description, city_id) VALUES (?, ?, ?)",
-                     PreparedStatement.RETURN_GENERATED_KEYS)
-        ) {
+             PreparedStatement ps =  cn.prepareStatement(ADD,
+                     PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
             ps.setInt(3, post.getCity().getId());
@@ -72,7 +76,7 @@ public class PostDbStore {
 
     public void update(Post post) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("UPDATE post SET name = ?, description = ?, city_id = ? WHERE id = ?")) {
+             PreparedStatement ps =  cn.prepareStatement(UPDATE)) {
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
             ps.setInt(3, post.getCity().getId());
@@ -84,28 +88,25 @@ public class PostDbStore {
         }
 
     public Post findById(int id) {
+        Post result = null;
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post WHERE id = ?")) {
+             PreparedStatement ps =  cn.prepareStatement(FIND_BY_ID)) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    return new Post(it.getInt("id"),
-                            it.getString("name"),
-                            it.getString("description"),
-                            LocalDateTime.now(),
-                            cityService.findById(it.getInt("city_id")));
+                    result = addPost(it);
                 }
             }
         } catch (Exception e) {
             LOG.error("Exception in  findById() method", e);
         }
-        return null;
+        return result;
     }
 
     public void delete(Post post) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =
-                     cn.prepareStatement("DELETE FROM post WHERE id = ?")) {
+                     cn.prepareStatement(DELETE)) {
             ps.setInt(1, post.getId());
             ps.executeUpdate();
         } catch (Exception e) {
@@ -113,12 +114,13 @@ public class PostDbStore {
         }
     }
 
-    private Post addPost(ResultSet it) throws SQLException {
-        return new Post(it.getInt("id"),
-                it.getString("name"),
-                it.getString("description"),
+    private Post addPost(ResultSet resultset) throws SQLException {
+        return new Post(
+                resultset.getInt("id"),
+                resultset.getString("name"),
+                resultset.getString("description"),
                 LocalDateTime.now(),
-                cityService.findById(it.getInt("city_id")));
+                cityService.findById(resultset.getInt("city_id")));
     }
 
 }
