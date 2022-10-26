@@ -7,10 +7,7 @@ import org.springframework.stereotype.Repository;
 import ru.job4j.model.Post;
 import ru.job4j.service.CityService;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +17,9 @@ public class PostDbStore {
 
     private final static String FIND_ALL = "SELECT * FROM post ORDER BY id";
 
-    private final static String ADD = "INSERT INTO post(name, description, city_id) VALUES (?, ?, ?)";
+    private final static String ADD = "INSERT INTO post(name, description, created, visible, city_id) VALUES (?, ?, ?, ?, ?)";
 
-    private final static String UPDATE = "UPDATE post SET name = ?, description = ?, city_id = ? WHERE id = ?";
+    private final static String UPDATE = "UPDATE post SET name = ?, description = ?, created = ?, visible = ?, city_id = ? WHERE id = ?";
 
     private final static String FIND_BY_ID = "SELECT * FROM post WHERE id = ?";
 
@@ -61,7 +58,9 @@ public class PostDbStore {
                      PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
-            ps.setInt(3, post.getCity().getId());
+            ps.setTimestamp(3,  Timestamp.valueOf(post.getCreated()));
+            ps.setBoolean(4, post.isVisible());
+            ps.setInt(5, post.getCity().getId());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -79,8 +78,10 @@ public class PostDbStore {
              PreparedStatement ps =  cn.prepareStatement(UPDATE)) {
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
-            ps.setInt(3, post.getCity().getId());
-            ps.setInt(4, post.getId());
+            ps.setTimestamp(3,  Timestamp.valueOf(post.getCreated()));
+            ps.setBoolean(4, post.isVisible());
+            ps.setInt(5, post.getCity().getId());
+            ps.setInt(6, post.getId());
             ps.executeUpdate();
         } catch (Exception e) {
             LOG.error("Exception in  update() method", e);
@@ -119,7 +120,8 @@ public class PostDbStore {
                 resultset.getInt("id"),
                 resultset.getString("name"),
                 resultset.getString("description"),
-                LocalDateTime.now(),
+                resultset.getTimestamp("created").toLocalDateTime(),
+                resultset.getBoolean("visible"),
                 cityService.findById(resultset.getInt("city_id")));
     }
 
