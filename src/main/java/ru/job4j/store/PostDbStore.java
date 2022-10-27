@@ -4,6 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import ru.job4j.model.City;
 import ru.job4j.model.Post;
 import ru.job4j.service.CityService;
 
@@ -29,11 +30,8 @@ public class PostDbStore {
 
     private final BasicDataSource pool;
 
-    private final CityService cityService;
-
-    public PostDbStore(BasicDataSource pool, CityService cityService) {
+    public PostDbStore(BasicDataSource pool) {
         this.pool = pool;
-        this.cityService = cityService;
     }
 
     public List<Post> findAll() {
@@ -122,7 +120,7 @@ public class PostDbStore {
                 resultset.getString("description"),
                 resultset.getTimestamp("created").toLocalDateTime(),
                 resultset.getBoolean("visible"),
-                cityService.findById(resultset.getInt("city_id")));
+                new City(resultset.getInt("city_id"), ""));
     }
 
 }
