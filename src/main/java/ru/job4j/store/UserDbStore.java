@@ -25,7 +25,7 @@ public class UserDbStore {
         this.pool = pool;
     }
 
-    public Optional<User> add(User user) {
+    public User add(User user) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =  cn.prepareStatement(ADD_USER,
                      PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -40,7 +40,7 @@ public class UserDbStore {
         } catch (Exception e) {
             LOG_USER.error("Exception in  add() method", e);
         }
-        return Optional.ofNullable(user);
+        return user;
     }
 
 }
