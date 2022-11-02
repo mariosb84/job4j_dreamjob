@@ -10,6 +10,7 @@ import ru.job4j.model.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Optional;
 
 @Repository
 public class UserDbStore {
@@ -24,7 +25,7 @@ public class UserDbStore {
         this.pool = pool;
     }
 
-    public User add(User user) {
+    public Optional<User> add(User user) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =  cn.prepareStatement(ADD_USER,
                      PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -39,7 +40,7 @@ public class UserDbStore {
         } catch (Exception e) {
             LOG_USER.error("Exception in  add() method", e);
         }
-        return user;
+        return Optional.ofNullable(user);
     }
 
 }
