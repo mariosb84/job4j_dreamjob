@@ -22,4 +22,9 @@ public class UserService {
         return Optional.empty();
     }
 
+    public Optional<User> findUserByEmailAndPassword(String email, String password) {
+        store.findUserByEmailAndPassword(email, password);
+        return Optional.empty();
+    }
+
 }
