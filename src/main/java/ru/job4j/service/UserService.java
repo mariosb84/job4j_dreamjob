@@ -18,13 +18,11 @@ public class UserService {
     }
 
     public Optional<User> add(User user) {
-        store.add(user);
-        return Optional.empty();
+        return store.add(user);
     }
 
     public Optional<User> findUserByEmailAndPassword(String email, String password) {
-        store.findUserByEmailAndPassword(email, password);
-        return Optional.empty();
+        return store.findUserByEmailAndPassword(email, password);
     }
 
 }
