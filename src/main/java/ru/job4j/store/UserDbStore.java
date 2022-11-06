@@ -16,7 +16,7 @@ import java.util.Optional;
 @Repository
 public class UserDbStore {
 
-    private final static String ADD_USER = "INSERT INTO users(email, password) VALUES (?, ?)";
+    private final static String ADD_USER = "INSERT INTO users(email, password, name) VALUES (?, ?, ?)";
 
     private final static String FIND_BY_EMAIL_AND_PASSWORD_USER  = "SELECT * FROM users WHERE email = ? AND password = ?";
 
@@ -35,6 +35,7 @@ public class UserDbStore {
                      PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getPassword());
+            ps.setString(3, user.getName());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -69,7 +70,8 @@ public class UserDbStore {
         return new User(
                 resultset.getInt("id"),
                 resultset.getString("email"),
-                resultset.getString("password")
+                resultset.getString("password"),
+                resultset.getString("name")
         );
     }
 
