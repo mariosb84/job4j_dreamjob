@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.job4j.model.Post;
-import ru.job4j.model.User;
 import ru.job4j.service.CityService;
 import ru.job4j.service.PostService;
+import ru.job4j.utilites.Session;
 
 import javax.servlet.http.HttpSession;
 
@@ -30,19 +30,15 @@ class PostController {
     @GetMapping("/posts")
     public String posts(Model model, HttpSession session) {
         model.addAttribute("posts", postService.findAll());
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("Гость");
-        }
-        model.addAttribute("user", user);
+        Session.userSession(model, session);
         return "posts";
     }
 
     @GetMapping("/formAddPost")
-    public String formAddPost(Model model) {
+    public String formAddPost(Model model, HttpSession session) {
         model.addAttribute("post", new Post(0, "Заполните поле", "Заполните поле"));
         model.addAttribute("cities", cityService.getAllCities());
+        Session.userSession(model, session);
         return "addPost";
     }
 
@@ -54,9 +50,10 @@ class PostController {
     }
 
     @GetMapping("/formUpdatePost/{postId}")
-    public String formUpdatePost(Model model, @PathVariable("postId") int id) {
+    public String formUpdatePost(Model model, @PathVariable("postId") int id, HttpSession session) {
         model.addAttribute("post", postService.findById(id));
         model.addAttribute("cities", cityService.getAllCities());
+        Session.userSession(model, session);
         return "updatePost";
     }
 
