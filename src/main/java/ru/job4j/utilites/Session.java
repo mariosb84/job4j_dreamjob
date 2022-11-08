@@ -5,7 +5,11 @@ import ru.job4j.model.User;
 
 import javax.servlet.http.HttpSession;
 
-public class Session {
+public final class Session {
+
+    private Session() {
+
+    }
 
     public static void userSession(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
