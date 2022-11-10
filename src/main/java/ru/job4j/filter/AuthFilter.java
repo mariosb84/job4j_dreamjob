@@ -1,6 +1,8 @@
 package ru.job4j.filter;
 
 import org.springframework.stereotype.Component;
+import ru.job4j.utilites.Any;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,14 +19,11 @@ public class AuthFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         String uri = req.getRequestURI();
-        if (uri.endsWith("loginPage") || uri.endsWith("login")) {
+        if (Any.any(uri)) {
             chain.doFilter(req, res);
             return;
         }
-        if (uri.endsWith("formAddUser") || uri.endsWith("addUser") || uri.endsWith("registration")) {
-            chain.doFilter(req, res);
-            return;
-        }
+
         if (req.getSession().getAttribute("user") == null) {
             res.sendRedirect(req.getContextPath() + "/loginPage");
             return;
