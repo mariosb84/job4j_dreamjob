@@ -15,7 +15,7 @@ public final class Any {
         set.add("formAddUser");
         set.add("addUser");
         set.add("registration");
-        return set.stream().anyMatch(s -> s.endsWith(uri));
+        return set.stream().anyMatch(uri::endsWith);
     }
 
 }
