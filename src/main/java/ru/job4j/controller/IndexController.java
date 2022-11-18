@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 
 @ThreadSafe
 @Controller
-class IndexControl {
+public class IndexController {
 
     @GetMapping("/index")
     public String index(Model model, HttpSession session) {

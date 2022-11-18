@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 
 @ThreadSafe
 @Controller
-class PostController {
+public class PostController {
 
     private final PostService postService;
     private final CityService cityService;
