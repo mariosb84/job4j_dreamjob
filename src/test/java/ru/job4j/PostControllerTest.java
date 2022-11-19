@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 public class PostControllerTest {
 
-    final static HttpSession session = new HttpSession() {
+    final static HttpSession SESSION = new HttpSession() {
         @Override
         public long getCreationTime() {
             return 0;
@@ -124,7 +124,7 @@ public class PostControllerTest {
                 postService,
                 cityService
         );
-        String page = postController.posts(model, session);
+        String page = postController.posts(model, SESSION);
         verify(model).addAttribute("posts", posts);
         assertThat(page, is("posts"));
     }
@@ -148,9 +148,9 @@ public class PostControllerTest {
                 postService,
                 cityService
         );
-        String page = postController.posts(model, session);
+        String page = postController.posts(model, SESSION);
         verify(model).addAttribute("posts", wrongData);
-        assertThat(page, is  ("posts"));
+        assertThat(page, is("posts"));
     }
 
     @Test
@@ -176,7 +176,7 @@ public class PostControllerTest {
                 postService,
                 cityService
         );
-        String page = postController.formAddPost(model, session);
+        String page = postController.formAddPost(model, SESSION);
         assertThat(page, is("addPost"));
     }
 
@@ -191,7 +191,7 @@ public class PostControllerTest {
                 postService,
                 cityService
         );
-        String page = postController.formUpdatePost(model, input.getId(), session);
+        String page = postController.formUpdatePost(model, input.getId(), SESSION);
         verify(model).addAttribute("post", input);
         assertThat(page, is("updatePost"));
     }
