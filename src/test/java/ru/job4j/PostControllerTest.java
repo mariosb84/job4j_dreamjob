@@ -20,10 +20,9 @@ import static org.mockito.Mockito.*;
 
 public class PostControllerTest {
 
-    final static HttpSession SESSION = mock(HttpSession.class);
-
     @Test
     public void whenPosts() {
+        HttpSession session = mock(HttpSession.class);
         List<Post> posts = Arrays.asList(
                 new Post(1, "New post", "New post desc"),
                 new Post(2, "New post", "New post desc")
@@ -36,7 +35,7 @@ public class PostControllerTest {
                 postService,
                 cityService
         );
-        String page = postController.posts(model, SESSION);
+        String page = postController.posts(model, session);
         verify(model).addAttribute("posts", posts);
         assertThat(page, is("posts"));
     }
@@ -44,6 +43,7 @@ public class PostControllerTest {
     @Ignore
     @Test
     public void whenPostsCrash() {
+        HttpSession session = mock(HttpSession.class);
         List<Post> posts = Arrays.asList(
                 new Post(1, "New post", "New post desc"),
                 new Post(2, "New post", "New post desc")
@@ -60,7 +60,7 @@ public class PostControllerTest {
                 postService,
                 cityService
         );
-        String page = postController.posts(model, SESSION);
+        String page = postController.posts(model, session);
         verify(model).addAttribute("posts", wrongData);
         assertThat(page, is("posts"));
     }
@@ -81,6 +81,7 @@ public class PostControllerTest {
 
     @Test
     public void whenFormAddPost() {
+        HttpSession session = mock(HttpSession.class);
         PostService postService = mock(PostService.class);
         Model model = mock(Model.class);
         CityService cityService = mock(CityService.class);
@@ -88,12 +89,13 @@ public class PostControllerTest {
                 postService,
                 cityService
         );
-        String page = postController.formAddPost(model, SESSION);
+        String page = postController.formAddPost(model, session);
         assertThat(page, is("addPost"));
     }
 
     @Test
     public void whenFormUpdatePost() {
+        HttpSession session = mock(HttpSession.class);
         Post input = new Post(1, "New post", "New post desc", LocalDateTime.now(), true, new City());
         PostService postService = mock(PostService.class);
         Model model = mock(Model.class);
@@ -103,7 +105,7 @@ public class PostControllerTest {
                 postService,
                 cityService
         );
-        String page = postController.formUpdatePost(model, input.getId(), SESSION);
+        String page = postController.formUpdatePost(model, input.getId(), session);
         verify(model).addAttribute("post", input);
         assertThat(page, is("updatePost"));
     }
